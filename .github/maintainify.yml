@@ -1,0 +1,146 @@
+settings:
+  misc:
+    create-missing-labels: false #auto create missing labels defined within this config
+
+  cross-linking: # Add labels to issues/prs if a pr/issue has been linked
+    enabled: true
+    issues: # Add labels to the issue when linked with a PR
+      labels: [ "meta/has-pr" ]
+    prs: # Add labels to the PR when linked with an issue
+      labels: [ "meta/has-issue" ]
+
+triage:
+  labels: [ "status/triage", "triage" ] # Define triage status label to be operated by the app
+
+  skip: # skip an automated triage process based on configured conditions
+    enabled: false
+    remove-triage-labels: false
+    do-manual-triage: false # request a manual triage if an automated one has been skipped
+    add-labels: [ "status/triage/skipped" ]
+    conditions:
+      labels: [ "needs-attention", "needs-discussion" ] # skip triage if at least one of the labels is present
+      authors: # OR an issue/pr has been opened by someone defined
+        teams: [ "maintainers" ]
+        users: [ "farnsworth", "zoidberg" ]
+    comment:
+      enabled: false
+      message: "Automated triaging skipped."
+
+  manual: # schedule a human maintainer triaging after an automated one
+    enabled: true
+    add-labels: [ "status/triage/manual" ]
+    assignees: # we'll do a smart round-robin between all of them and within each team as well
+      teams: [ "maintainers" ]
+      users: [ "farnsworth", "zoidberg" ]
+    comment:
+      enabled: false
+      message: "Automated triaging completed. Pending human maintainer 🤖"
+
+  repeating: # do an automatic triage again based on configured events (like adding a triage label again)
+    enabled: true
+    triage-labels: false # do a re-triage upon defined known triaging labels
+    only-manual: false # skip right to the manual triaging stage upon repeated triaging
+    conditions:
+      labels: [ "status/re-triage" ] # additional labels to consider
+
+  completed: # actions to do upon completing automated triaging
+    # TODO actions to do upon completing MANUAL triaging?
+    add-labels: [ "status/triage/completed" ]
+    remove-labels: [ "needs-attention" ]
+    remove-assignees: false
+    assignees: # we'll assign issues/prs upon triaging completion to defiend teams/people
+      round-robin: false # we'll do a smart round-robin calculating each person's current load
+      #use-code-owners: false #use CO for PRs
+      teams: [ "maintainers" ]
+      users: [ "farnsworth", "zoidberg" ]
+
+
+weights: #custom list of groups of labels with weights
+  priority: # priority is a well-known weight type, we'll use it for our internal issue weight balancing
+    weights:
+      - priority/high: 3
+      - priority/medium: 2
+      - priority/low: 1
+
+  severity: # severity is a well-known weight type, we'll use it for our internal issue weight balancing
+    weights:
+      - severity/blocker: 10
+      - severity/critical: 5
+      - severity/high: 3
+      - severity/medium: 2
+      - severity/low: 1
+
+  issue-type: # a custom user-defined type
+    weights:
+      - type/security: 10
+      - type/cve: 10
+      - type/dependencies: 2
+    rules: # we'll assign the labels based on the weight of the issue
+      - ">=10": [ "priority/high" ]
+      - "<10": [ "priority/low" ]
+
+template-matching: # We'll assign labels based on the issue/pr template rules elements' id's you've defined
+  enabled: true
+  rules:
+    # <id>: <label>
+    - # See https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#keys
+    - is-backend: scope/backend
+    - is-frontend: scope/frontend
+    - is-infra: scope/infrastructure
+    - is-bug: type/bug
+    - is-feature: type/feature
+
+feedback-management:
+  enabled: false
+  only-author: false
+  by-command:
+    enabled: true
+    command: "/bad_bot"
+  #TODO periods, stale state, etc.
+
+notifications:
+  digest: # daily digest via slack/email with triaging done/to do statistics
+    enabled: false
+    channel: [ "slack", "email" ]
+    # allow to choose GitHub username/group for emailing
+    # input slack hook
+
+commands:
+  re-triage:
+    enabled: false
+    command: "/triage"
+  triage-done:
+    enabled: false
+    command: "/done"
+
+
+
+
+    #autolabel:
+    #      paths:
+    #        - example:
+    #            - '*' # add an 'example' label to any root file change
+    #        - 'scope/backend': # add a 'scope/backend' label to any change within 'api' module change
+    #            - module/api/*
+    #            - module/api/**/*
+    #        - 'scope/backend': # add a backend label to any *.java file within src dir
+    #            - src/**/*.java
+    #########
+    # Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
+    #source:
+    #  - any: ['src/**/*', '!src/docs/*']
+    # Add 'frontend` label to any change to *.js files as long as the `main.js` hasn't changed
+    #frontend:
+    #  - any: ['src/**/*.js']
+    #    all: ['!src/main.js']
+    #########
+
+  # TODO assign configured labels based on priority sum
+  # TODO assign configured labels based on severity sum
+  # TODO assign configured labels based on custom sum
+
+  # TODO an option to post comments on every completed action
+
+  # TODO !!! exception tracing via issue/pr comments
+
+  # TODO assign "current" milestone to issues/prs?
