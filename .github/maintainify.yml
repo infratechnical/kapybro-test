@@ -40,7 +40,7 @@ triage:
     add-labels: [ "status/triage/completed" ]
     remove-labels: [ "needs-attention" ]
     remove-assignees: false
-    round-robin-assignment: false  # we'll do a smart round-robin calculating each person's current load. Otherwise it has to be one user? 
+    round-robin-assignment: false  # we'll do a smart round-robin calculating each person's current load. Otherwise it has to be one user?
     assignees: # we'll assign issues/prs upon triaging completion to defiend teams/people
       #use-code-owners: false #use CO for PRs
       teams: [ "maintainers" ]
@@ -48,28 +48,28 @@ triage:
 
 
 label-weights: #custom list of groups of labels with weights
-  priority: # priority is a well-known weight type, we'll use it for our internal issue weight balancing
-    weights:
-      - priority/high: 3
-      - priority/medium: 2
-      - priority/low: 1
+  - priority: # priority is a well-known weight type, we'll use it for our internal issue weight balancing
+      weights:
+        - priority/high: 3
+        - priority/medium: 2
+        - priority/low: 1
 
-  severity: # severity is a well-known weight type, we'll use it for our internal issue weight balancing
-    weights:
-      - severity/blocker: 10
-      - severity/critical: 5
-      - severity/high: 3
-      - severity/medium: 2
-      - severity/low: 1
+  - severity: # severity is a well-known weight type, we'll use it for our internal issue weight balancing
+      weights:
+        - severity/blocker: 10
+        - severity/critical: 5
+        - severity/high: 3
+        - severity/medium: 2
+        - severity/low: 1
 
-  issue-type: # a custom user-defined type
-    weights:
-      - type/security: 10
-      - type/cve: 10
-      - type/dependencies: 2
-    rules: # we'll assign the labels based on the weight of the issue
-      - ">=10": [ "priority/high" ]
-      - "<10": [ "priority/low" ]
+  - issue-type: # a custom user-defined type
+      weights:
+        - type/security: 10
+        - type/cve: 10
+        - type/dependencies: 2
+      rules: # we'll assign the labels based on the weight of the issue
+        - ">=10": [ "priority/high" ]
+        - "<10": [ "priority/low" ]
 
 cross-linking: # Add labels to issues/prs if a pr/issue has been linked
   enabled: false
@@ -92,25 +92,25 @@ template-matching: # We'll assign labels based on the issue/pr template rules el
 feedback-management:
   enabled: false
   only-author: false
-#  by-command:
-#    enabled: true
-#    command: "/bad_bot"
-  #TODO periods, stale state, etc.
+    #  by-command:
+    #    enabled: true
+    #    command: "/bad_bot"
+    #TODO periods, stale state, etc.
 
-#notifications:
-#  digest: # daily digest via slack/email with triaging done/to do statistics
-#    enabled: false
-#    channel: [ "slack", "email" ]
+    #notifications:
+    #  digest: # daily digest via slack/email with triaging done/to do statistics
+    #    enabled: false
+    #    channel: [ "slack", "email" ]
     # allow to choose GitHub username/group for emailing
     # input slack hook
 
-#commands:
-#  re-triage:
-#    enabled: false
-#    command: "/triage"
-#  triage-done:
-#    enabled: false
-#    command: "/done"
+    #commands:
+    #  re-triage:
+    #    enabled: false
+    #    command: "/triage"
+    #  triage-done:
+    #    enabled: false
+    #    command: "/done"
 
 
 
@@ -132,7 +132,7 @@ feedback-management:
     #frontend:
     #  - any: ['src/**/*.js']
     #    all: ['!src/main.js']
-    #########
+  #########
 
   # TODO assign configured labels based on priority sum
   # TODO assign configured labels based on severity sum
