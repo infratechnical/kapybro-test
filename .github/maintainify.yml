@@ -1,13 +1,5 @@
 settings:
-  misc:
-    create-missing-labels: false #auto create missing labels defined within this config
-
-  cross-linking: # Add labels to issues/prs if a pr/issue has been linked
-    enabled: true
-    issues: # Add labels to the issue when linked with a PR
-      labels: [ "meta/has-pr" ]
-    prs: # Add labels to the PR when linked with an issue
-      labels: [ "meta/has-issue" ]
+  create-missing-labels: false #auto create missing labels defined within this config
 
 triage:
   labels: [ "status/triage", "triage" ] # Define triage status label to be operated by the app
@@ -27,7 +19,7 @@ triage:
       message: "Automated triaging skipped."
 
   manual: # schedule a human maintainer triaging after an automated one
-    enabled: true
+    enabled: false
     add-labels: [ "status/triage/manual" ]
     assignees: # we'll do a smart round-robin between all of them and within each team as well
       teams: [ "maintainers" ]
@@ -37,8 +29,8 @@ triage:
       message: "Automated triaging completed. Pending human maintainer 🤖"
 
   repeating: # do an automatic triage again based on configured events (like adding a triage label again)
-    enabled: true
-    triage-labels: false # do a re-triage upon defined known triaging labels
+    enabled: false
+    trigger-by-triage-labels: false # do a re-triage upon defined known triaging labels
     only-manual: false # skip right to the manual triaging stage upon repeated triaging
     conditions:
       labels: [ "status/re-triage" ] # additional labels to consider
@@ -48,14 +40,14 @@ triage:
     add-labels: [ "status/triage/completed" ]
     remove-labels: [ "needs-attention" ]
     remove-assignees: false
+    round-robin-assignment: false  # we'll do a smart round-robin calculating each person's current load. Otherwise it has to be one user? 
     assignees: # we'll assign issues/prs upon triaging completion to defiend teams/people
-      round-robin: false # we'll do a smart round-robin calculating each person's current load
       #use-code-owners: false #use CO for PRs
       teams: [ "maintainers" ]
       users: [ "farnsworth", "zoidberg" ]
 
 
-weights: #custom list of groups of labels with weights
+label-weights: #custom list of groups of labels with weights
   priority: # priority is a well-known weight type, we'll use it for our internal issue weight balancing
     weights:
       - priority/high: 3
@@ -79,8 +71,15 @@ weights: #custom list of groups of labels with weights
       - ">=10": [ "priority/high" ]
       - "<10": [ "priority/low" ]
 
+cross-linking: # Add labels to issues/prs if a pr/issue has been linked
+  enabled: false
+  issues: # Add labels to the issue when linked with a PR
+    labels: [ "meta/has-pr" ]
+  prs: # Add labels to the PR when linked with an issue
+    labels: [ "meta/has-issue" ]
+
 template-matching: # We'll assign labels based on the issue/pr template rules elements' id's you've defined
-  enabled: true
+  enabled: false
   rules:
     # <id>: <label>
     - # See https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#keys
@@ -93,25 +92,25 @@ template-matching: # We'll assign labels based on the issue/pr template rules el
 feedback-management:
   enabled: false
   only-author: false
-  by-command:
-    enabled: true
-    command: "/bad_bot"
+#  by-command:
+#    enabled: true
+#    command: "/bad_bot"
   #TODO periods, stale state, etc.
 
-notifications:
-  digest: # daily digest via slack/email with triaging done/to do statistics
-    enabled: false
-    channel: [ "slack", "email" ]
+#notifications:
+#  digest: # daily digest via slack/email with triaging done/to do statistics
+#    enabled: false
+#    channel: [ "slack", "email" ]
     # allow to choose GitHub username/group for emailing
     # input slack hook
 
-commands:
-  re-triage:
-    enabled: false
-    command: "/triage"
-  triage-done:
-    enabled: false
-    command: "/done"
+#commands:
+#  re-triage:
+#    enabled: false
+#    command: "/triage"
+#  triage-done:
+#    enabled: false
+#    command: "/done"
 
 
 
