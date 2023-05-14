@@ -47,29 +47,29 @@ triage:
       users: [ "farnsworth", "zoidberg" ]
 
 
-label-weights: #custom list of groups of labels with weights
-  - priority: # priority is a well-known weight type, we'll use it for our internal issue weight balancing
-      weights:
-        - priority/high: 3
-        - priority/medium: 2
-        - priority/low: 1
+label-groups: #custom list of groups of labels with weights
+  - name: priority # priority is a well-known weight type, we'll use it for our internal issue weight balancing
+    weights:
+      - priority/high: 3
+      - priority/medium: 2
+      - priority/low: 1
 
-  - severity: # severity is a well-known weight type, we'll use it for our internal issue weight balancing
-      weights:
-        - severity/blocker: 10
-        - severity/critical: 5
-        - severity/high: 3
-        - severity/medium: 2
-        - severity/low: 1
+  - name: severity # severity is a well-known weight type, we'll use it for our internal issue weight balancing
+    weights:
+      - severity/blocker: 10
+      - severity/critical: 5
+      - severity/high: 3
+      - severity/medium: 2
+      - severity/low: 1
 
-  - issue-type: # a custom user-defined type
-      weights:
-        - type/security: 10
-        - type/cve: 10
-        - type/dependencies: 2
-      rules: # we'll assign the labels based on the weight of the issue
-        - ">=10": [ "priority/high" ]
-        - "<10": [ "priority/low" ]
+  - name: issue-type # a custom user-defined type
+    weights:
+      - type/security: 10
+      - type/cve: 10
+      - type/dependencies: 2
+    rules: # we'll assign the labels based on the weight of the issue
+      - ">=10": [ "priority/high" ]
+      - "<10": [ "priority/low" ]
 
 cross-linking: # Add labels to issues/prs if a pr/issue has been linked
   enabled: false
@@ -126,12 +126,12 @@ feedback-management:
     #            - src/**/*.java
     #########
     # Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
-    #source:
-    #  - any: ['src/**/*', '!src/docs/*']
-    # Add 'frontend` label to any change to *.js files as long as the `main.js` hasn't changed
-    #frontend:
-    #  - any: ['src/**/*.js']
-    #    all: ['!src/main.js']
+  #source:
+  #  - any: ['src/**/*', '!src/docs/*']
+  # Add 'frontend` label to any change to *.js files as long as the `main.js` hasn't changed
+  #frontend:
+  #  - any: ['src/**/*.js']
+  #    all: ['!src/main.js']
   #########
 
   # TODO assign configured labels based on priority sum
