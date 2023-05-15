@@ -1,5 +1,4 @@
 settings:
-  create-missing-labels: false #auto create missing labels defined within this config
 
 triage:
   label: "status/triage" # Define triage status label to be operated by the app
