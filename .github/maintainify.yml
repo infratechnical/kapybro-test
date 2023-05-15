@@ -2,7 +2,7 @@ settings:
   create-missing-labels: false #auto create missing labels defined within this config
 
 triage:
-  labels: [ "status/triage", "triage" ] # Define triage status label to be operated by the app
+  label: "status/triage" # Define triage status label to be operated by the app
 
   skip: # skip an automated triage process based on configured conditions
     enabled: false
@@ -40,8 +40,8 @@ triage:
     add-labels: [ "status/triage/completed" ]
     remove-labels: [ "needs-attention" ]
     remove-assignees: false
-    round-robin-assignment: false  # we'll do a smart round-robin calculating each person's current load. Otherwise it has to be one user?
-    assignees: # we'll assign issues/prs upon triaging completion to defiend teams/people
+    round-robin-assignment: false  # we'll do a smart round-robin calculating each person's current load. Otherwise, it has to be one user?
+    assignees: # we'll assign issues/prs upon triaging completion to defined teams/people
       #use-code-owners: false #use CO for PRs
       teams: [ "maintainers" ]
       users: [ "farnsworth", "zoidberg" ]
