@@ -37,7 +37,7 @@ triage:
   completed: # actions to do upon completing automated triaging
     # TODO actions to do upon completing MANUAL triaging?
     add-labels: [ "status/triage/completed" ]
-    remove-labels: [ "needs-attention" ]
+    remove-labels: [ "needs-attention", "status/re-triage" ]
     remove-assignees: false
     round-robin-assignment: false  # we'll do a smart round-robin calculating each person's current load. Otherwise, it has to be one user?
     assignees: # we'll assign issues/prs upon triaging completion to defined teams/people
