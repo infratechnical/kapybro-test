@@ -28,7 +28,7 @@ triage:
       message: "Automated triaging completed. Pending human maintainer 🤖"
 
   repeating: # do an automatic triage again based on configured events (like adding a triage label again)
-    enabled: false
+    enabled: true
     trigger-by-triage-labels: false # do a re-triage upon defined known triaging labels
     only-manual: false # skip right to the manual triaging stage upon repeated triaging
     conditions:
