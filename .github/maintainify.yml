@@ -5,7 +5,7 @@ triage:
 
   skip: # skip an automated triage process based on configured conditions
     enabled: true
-    remove-triage-labels: truw
+    remove-triage-labels: true
     do-manual-triage: true # request a manual triage if an automated one has been skipped
     add-labels: [ "status/triage/skipped" ]
     conditions:
