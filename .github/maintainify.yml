@@ -4,9 +4,9 @@ triage:
   label: "status/triage" # Define triage status label to be operated by the app
 
   skip: # skip an automated triage process based on configured conditions
-    enabled: false
-    remove-triage-labels: false
-    do-manual-triage: false # request a manual triage if an automated one has been skipped
+    enabled: true
+    remove-triage-labels: truw
+    do-manual-triage: true # request a manual triage if an automated one has been skipped
     add-labels: [ "status/triage/skipped" ]
     conditions:
       labels: [ "needs-attention", "needs-discussion" ] # skip triage if at least one of the labels is present
@@ -14,22 +14,22 @@ triage:
         teams: [ "maintainers" ]
         users: [ "farnsworth", "zoidberg" ]
     comment:
-      enabled: false
+      enabled: true
       message: "Automated triaging skipped."
 
   manual: # schedule a human maintainer triaging after an automated one
-    enabled: false
+    enabled: true
     add-labels: [ "status/triage/manual" ]
     assignees: # we'll do a smart round-robin between all of them and within each team as well
-      teams: [ "maintainers" ]
-      users: [ "farnsworth", "zoidberg" ]
+#      teams: [ "maintainers" ]
+      users: [ "Haarolean" ]
     comment:
-      enabled: false
+      enabled: true
       message: "Automated triaging completed. Pending human maintainer 🤖"
 
   repeating: # do an automatic triage again based on configured events (like adding a triage label again)
     enabled: true
-    trigger-by-triage-labels: false # do a re-triage upon defined known triaging labels
+    trigger-by-triage-labels: true # do a re-triage upon defined known triaging labels
     only-manual: false # skip right to the manual triaging stage upon repeated triaging
     conditions:
       labels: [ "status/re-triage" ] # additional labels to consider
@@ -38,7 +38,7 @@ triage:
     # TODO actions to do upon completing MANUAL triaging?
     add-labels: [ "status/triage/completed" ]
     remove-labels: [ "needs-attention", "status/re-triage" ]
-    remove-assignees: false
+    remove-assignees: true
     round-robin-assignment: false  # we'll do a smart round-robin calculating each person's current load. Otherwise, it has to be one user?
     assignees: # we'll assign issues/prs upon triaging completion to defined teams/people
       #use-code-owners: false #use CO for PRs
