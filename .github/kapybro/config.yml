@@ -2,7 +2,7 @@ settings:
 
 maintainers: # Will be used for assignment, find the usages lower
   teams: [ "maintainers" ]
-  users: [ "farnsworth", "zoidberg" ]
+  users: [ "farnsworth", "haarolean" ]
 
 triage:
   label: "status/triage" # Define triage status label to be operated by the app
