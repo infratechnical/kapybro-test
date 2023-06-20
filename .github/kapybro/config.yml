@@ -73,16 +73,18 @@ cross-linking: # Add labels to issues/prs if a pr/issue has been linked
   prs: # Add labels to the PR when linked with an issue
     labels: [ "meta/has-issue" ]
 
-template-matching: # We'll assign labels based on the issue/pr template rules elements' id's you've defined
-  enabled: true
+labeling: # We'll assign labels based on the issue/pr template rules elements' id's you've defined
+  enabled: false
+  case-sensitive: false
+  match-title: true
+  match-body: true
   rules:
-    # <id>: <label>
-    - # See https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema#keys
-    - is-backend: scope/backend
-    - is-frontend: scope/frontend
-    - is-infra: scope/infrastructure
-    - is-bug: type/bug
-    - is-feature: type/feature
+    # <keyword>: <label>
+    - backend: scope/backend
+    - frontend: scope/frontend
+    - infra: scope/infrastructure
+    - bug: type/bug
+    - feature: type/feature
 
 feedback-management:
   enabled: true
