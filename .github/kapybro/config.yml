@@ -74,7 +74,7 @@ cross-linking: # Add labels to issues/prs if a pr/issue has been linked
     labels: [ "meta/has-issue" ]
 
 labeling: # We'll assign labels based on the issue/pr template rules elements' id's you've defined
-  enabled: false
+  enabled: true
   case-sensitive: false
   match-title: true
   match-body: true
