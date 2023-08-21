@@ -1,0 +1,21 @@
+name: Sleep for 1 Hour
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  sleep_job:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Sleep for 1 Hour
+      run: |
+        echo "Sleeping for 1 hour..."
+        sleep 1h
+        echo "Finished sleeping"
