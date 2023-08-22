@@ -1,4 +1,4 @@
-name: Sleep for 1 Hour
+name: Sleep for 1 min
 
 on:
   pull_request:
@@ -14,8 +14,8 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
-    - name: Sleep for 1 Hour
+    - name: Sleep for 1 min
       run: |
-        echo "Sleeping for 1 hour..."
-        sleep 1h
+        echo "Sleeping for 1 min..."
+        sleep 1m
         echo "Finished sleeping"

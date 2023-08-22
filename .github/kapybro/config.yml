@@ -106,3 +106,8 @@ locking:
   comment:
     enabled: true
     message: "Thanks for the interest in this issue. Please, raise a new one or open up a discussion! Thanks"
+
+auto-rebase: # Enable auto rebasing PRs with "auto merge" on
+  enabled: true
+  rebase-on-label: true
+  labels: [ "status/auto-merge" ]
