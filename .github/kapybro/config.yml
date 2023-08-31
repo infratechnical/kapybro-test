@@ -5,6 +5,8 @@ maintainers: # Will be used for assignment, find the usages lower
   users: [ "farnsworth", "haarolean" ]
 
 triage:
+  enabled: true
+
   label: "status/triage" # Define triage status label to be operated by the app
   remove-assignees: true # Remove all the assignees present upon issue creation
 
