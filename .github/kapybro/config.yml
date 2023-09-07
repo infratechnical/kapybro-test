@@ -1,57 +1,62 @@
 settings:
 
-maintainers: # Will be used for assignment, find the usages lower
+maintainers: 
   teams: [ "maintainers" ]
-  users: [ "farnsworth", "haarolean" ]
+  users: [ "farnsworth", "zoidberg" ]
 
 triage:
   enabled: true
 
-  label: "status/triage" # Define triage status label to be operated by the app
-  remove-assignees: true # Remove all the assignees present upon issue creation
+  label: "status/triage" 
+  remove-assignees: true 
 
-  skip: # skip an automated triage process based on configured conditions
+  skip: 
     enabled: true
     remove-triage-labels: true
-    do-manual-triage: true # request a manual triage if an automated one has been skipped
-    add-labels: [ "status/triage/skipped" ]
+    do-manual-triage: true 
+    labels:
+      add: [ "status/triage/skipped" ]
+      remove: [ ]
     conditions:
-      labels: [ "needs-attention", "needs-discussion" ] # skip triage if at least one of the labels is present
-      authors: # OR an issue/pr has been opened by someone defined
+      labels: [ "needs-attention", "needs-discussion" ] 
+      authors: 
         teams: [ "maintainers" ]
-        users: [ "farnsworth", "zoidberg" ]
+        users: [ "farnsworth", "haarolean" ]
     comment:
       enabled: true
       message: "Automated triaging skipped."
 
-  manual: # schedule a human maintainer triaging after an automated one
+  manual: 
     enabled: true
-    add-labels: [ "status/triage/manual" ]
-    assign-maintainers: true # Assign one maintainer from maintainer list upon manual triage
+    label: "status/triage/manual" 
+    labels:
+      add: []
+      remove: []
+    assign-maintainers: true
     comment:
       enabled: true
       message: "Automated triaging completed. Pending human maintainer 🤖"
 
-  repeating: # do an automatic triage again based on configured events (like adding a triage label again)
+  repeating:
     enabled: true
-    trigger-by-triage-labels: true # do a re-triage upon defined known triaging labels
-    only-manual: true # skip right to the manual triaging stage upon repeated triaging
+    trigger-by-triage-labels: true
+    only-manual: false
     conditions:
-      labels: [ "status/re-triage" ] # additional labels to consider
+      labels: [ "status/re-triage" ]
 
-  completed: # actions to do upon completing automated triaging
-    add-labels: [ "status/triage/completed" ]
-    remove-labels: [ "needs-attention" ]
+  completed: 
+    labels:
+      add: [ "status/triage/completed" ]
+      remove: [ "needs-attention" ]
 
-
-label-groups: #custom list of groups of labels with weights
-  - name: priority # priority is a well-known weight type, we'll use it for our internal issue weight balancing
+label-groups: 
+  - name: priority
     weights:
       - priority/high: 3
       - priority/medium: 2
       - priority/low: 1
 
-  - name: severity # severity is a well-known weight type, we'll use it for our internal issue weight balancing
+  - name: severity 
     weights:
       - severity/blocker: 10
       - severity/critical: 5
@@ -59,29 +64,21 @@ label-groups: #custom list of groups of labels with weights
       - severity/medium: 2
       - severity/low: 1
 
-  - name: issue-type # a custom user-defined type
+  - name: issue-type
     weights:
       - type/security: 10
       - type/cve: 10
       - type/dependencies: 2
-    rules: # we'll assign the labels based on the weight of the issue
+    rules: 
       - ">=10": [ "priority/high" ]
       - "<10": [ "priority/low" ]
 
-cross-linking: # Add labels to issues/prs if a pr/issue has been linked
-  enabled: true
-  issues: # Add labels to the issue when linked with a PR
-    labels: [ "meta/has-pr" ]
-  prs: # Add labels to the PR when linked with an issue
-    labels: [ "meta/has-issue" ]
-
-keyword-labeling: # We'll assign labels based on the issue/pr template rules elements' id's you've defined
+keyword-labeling: 
   enabled: true
   case-sensitive: false
   match-title: true
   match-body: true
   rules:
-    # <keyword>: <label>
     - backend: scope/backend
     - frontend: scope/frontend
     - infra: scope/infrastructure
@@ -93,12 +90,19 @@ feedback-management:
   labels:
     requested: "status/feedback-requested"
     received: "status/feedback-received"
-  only-author-replies: true
+  only-author-replies: false
   assign-author: true
-  assign-maintainers: true # Assign one maintainer from maintainer list upon receiving feedback
+  assign-maintainers: true
   comments:
     requested: "Further user feedback is requested. Please reply within 7 days or we might close the issue."
     received: "Thanks for the additional feedback! We'll get back to your issue soon."
+    closed: "No feedback received within 7 days. Auto closing."
+  auto-close:
+    enabled: true
+    close-days: 7
+    labels:
+      add: [ "status/stale" ]
+      remove: [ "status/feedback-requested" ]
 
 locking:
   enabled: true
@@ -109,7 +113,7 @@ locking:
     enabled: true
     message: "Thanks for the interest in this issue. Please, raise a new one or open up a discussion! Thanks"
 
-auto-rebase: # Enable auto rebasing PRs with "auto merge" on
+auto-rebase:
   enabled: true
   rebase-on-label: true
   labels: [ "status/auto-merge" ]
