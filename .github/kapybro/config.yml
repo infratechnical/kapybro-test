@@ -27,7 +27,7 @@ triage:
       message: "Automated triaging skipped."
 
   manual: 
-    enabled: true
+    enabled: false
     label: "status/triage/manual" 
     labels:
       add: []
