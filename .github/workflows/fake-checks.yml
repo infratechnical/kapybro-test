@@ -1,0 +1,94 @@
+# Fake status checks driven by PR comments, for testing required-checks rules.
+#
+#   pass | fail | pending                 -> sets BOTH a commit status and a check run
+#   status pass|fail|error|pending [ctx]  -> commit status only (ctx defaults to license/cla)
+#   check pass|fail|pending|queued|neutral|cancelled|skipped|timed_out|action_required [name]
+#                                         -> check run only (name defaults to ci/test)
+#   pass my/check                         -> both, named my/check
+
+name: Fake checks
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  checks: write
+  statuses: write
+  pull-requests: read
+  issues: write
+
+jobs:
+  fake:
+    if: github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const STATUS = {
+              pass: 'success', success: 'success',
+              fail: 'failure', failure: 'failure',
+              error: 'error',
+              pending: 'pending',
+            };
+            const CHECK = {
+              pass: { status: 'completed', conclusion: 'success' },
+              success: { status: 'completed', conclusion: 'success' },
+              fail: { status: 'completed', conclusion: 'failure' },
+              failure: { status: 'completed', conclusion: 'failure' },
+              error: { status: 'completed', conclusion: 'failure' },
+              pending: { status: 'in_progress' },
+              queued: { status: 'queued' },
+              neutral: { status: 'completed', conclusion: 'neutral' },
+              cancelled: { status: 'completed', conclusion: 'cancelled' },
+              skipped: { status: 'completed', conclusion: 'skipped' },
+              timed_out: { status: 'completed', conclusion: 'timed_out' },
+              action_required: { status: 'completed', conclusion: 'action_required' },
+            };
+
+            const match = context.payload.comment.body
+              .trim()
+              .match(/^(status|check)?\s*(\w+)(?:\s+(\S+))?$/i);
+            if (!match) return;
+            const kind = match[1]?.toLowerCase();
+            const state = match[2].toLowerCase();
+            const name = match[3];
+
+            const { owner, repo } = context.repo;
+            const { data: pr } = await github.rest.pulls.get({
+              owner, repo, pull_number: context.issue.number,
+            });
+            const sha = pr.head.sha;
+            const done = [];
+
+            if (kind !== 'check' && STATUS[state]) {
+              const ctx = name ?? 'license/cla';
+              await github.rest.repos.createCommitStatus({
+                owner, repo, sha,
+                state: STATUS[state],
+                context: ctx,
+                description: 'faked via PR comment',
+              });
+              done.push(`status \`${ctx}\` → ${STATUS[state]}`);
+            }
+
+            if (kind !== 'status' && CHECK[state]) {
+              const checkName = name ?? 'ci/test';
+              const check = CHECK[state];
+              await github.rest.checks.create({
+                owner, repo,
+                name: checkName,
+                head_sha: sha,
+                ...check,
+                output: { title: 'faked via PR comment', summary: state },
+              });
+              done.push(`check \`${checkName}\` → ${check.conclusion ?? check.status}`);
+            }
+
+            if (!done.length) return;
+            await github.rest.issues.createComment({
+              owner, repo,
+              issue_number: context.issue.number,
+              body: `On \`${sha.slice(0, 7)}\`: ${done.join(', ')}`,
+            });
